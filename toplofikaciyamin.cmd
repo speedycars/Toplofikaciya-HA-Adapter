@@ -1,0 +1,1 @@
+start "Toplofikaciya MQTT Agent" /min "PATH\toplofikaciya.cmd"

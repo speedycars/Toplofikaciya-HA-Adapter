@@ -1,0 +1,6 @@
+services:
+  toplofikaciya:
+    image: "speedycars/toplofikaciya:latest"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
