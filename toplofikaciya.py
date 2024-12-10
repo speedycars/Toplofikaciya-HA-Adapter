@@ -62,7 +62,12 @@ while True:
     page = browser.get(url)
     time.sleep(1)
     browser.refresh()
-    wait = WebDriverWait(browser, timeout=10).until(EC.presence_of_element_located((By.ID, "email")))
+    try:
+        wait = WebDriverWait(browser, timeout=10).until(EC.presence_of_element_located((By.ID, "email")))
+    except:
+        browser.close()
+        browser.quit()
+        raise SystemExit(0)
     browser.find_element("id","email").send_keys(toplousername)
     browser.find_element("id","password").send_keys(toplopassword)
     browser.find_element("xpath", "/html/body/div[1]/div/div/div/div/form/div[4]/button[1]").click()
