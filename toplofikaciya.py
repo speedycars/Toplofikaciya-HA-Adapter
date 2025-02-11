@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import datetime
 import time
 import configparser
+import ast
 import pathlib
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -19,6 +20,7 @@ port = int(config.get('CONFIG', 'port'))
 mqttusername = str(config.get('CONFIG', 'mqttusername'))
 mqttpassword = str(config.get('CONFIG', 'mqttpassword'))
 location = str(config.get('CONFIG', 'location'))
+selenium_server = ast.literal_eval(config.get('CONFIG', 'selenium_server'))
 freq = int(config.get('CONFIG', 'freq'))
 toplousername = str(config.get('CONFIG', 'toplousername'))
 toplopassword = str(config.get('CONFIG', 'toplopassword'))
@@ -29,6 +31,8 @@ options.add_argument('--headless')
 options.add_argument('--disable-search-engine-choice-screen')
 options.add_argument('--disable-gpu')
 options.add_argument("--disable-cache")
+options.add_argument("--disable-crash-reporter");
+options.add_argument("--no-crash-upload");
 options.add_argument('--no-sandbox')
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--incognito')
@@ -57,7 +61,12 @@ dateandtime = 'unknown'
 
 while True:
     print('Starting new cycle! '+str(datetime.datetime.now())[0:-7]+'\n')
-    browser = webdriver.Chrome(service=service, options=options)
+    if selenium_server == "":
+        browser = webdriver.Chrome(service=service, options=options)
+        print("No external Selenium server is used.")
+    else:
+        browser = webdriver.Remote(command_executor=selenium_server, options=options)
+        print("Selenium server: "+selenium_server)
     browser.delete_all_cookies()
     page = browser.get(url)
     time.sleep(1)
